@@ -119,7 +119,6 @@ AI-Face-Age-Detection-using-Deep-Learning-and-OpenCV/
 | Chinmoy Debnath | 231902029 |
 
 ---
-
 ## 👨‍💻 Author
 
 Md Mahabub Hasan Mahin
