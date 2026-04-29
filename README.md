@@ -44,8 +44,12 @@ DEBUG=False
 
 ## 🤖 AI Modes
 
-opencv  → Fast, Good  
-pytorch → Slower, Better  
+| Mode    | Speed   | Accuracy |
+|---------|---------|----------|
+| opencv  | Fast    | Good     |
+| pytorch | Slower  | Better   |
+
+Default mode = opencv (no GPU required)
 
 ---
 
@@ -55,6 +59,8 @@ pytorch → Slower, Better
 - Age prediction (PyTorch + Caffe fallback)  
 - Gender detection  
 - Multi-face support  
+- Annotated output image  
+- Face crop preview  
 - Flask web UI  
 
 ---
@@ -62,25 +68,68 @@ pytorch → Slower, Better
 ## 📁 Project Structure
 
 AI-Face-Age-Detection-using-Deep-Learning-and-OpenCV/
+│
+├── app.py                      # Flask main app (routes + UI)
+├── config.py                   # App configuration (.env settings)
+├── models.py                   # Database models (SQLAlchemy)
+├── predict_fixed.py            # Face detection + age/gender prediction engine
+├── download_opencv_models.py   # Download required OpenCV models
+│
+├── requirements.txt            # Python dependencies
+├── Procfile                    # Deployment config (Render/Heroku)
+├── render.yaml                 # Render deployment setup
+├── runtime.txt                 # Python version
+├── README.md                   # Project documentation
+│
+├── models/
+│   └── best_utkface_model.pth
+│
+├── models_opencv/
+│   ├── opencv_face_detector.pb
+│   ├── opencv_face_detector.pbtxt
+│   ├── age_net.caffemodel
+│   ├── age_deploy.prototxt
+│   ├── gender_net.caffemodel
+│   └── gender_deploy.prototxt
+│
+├── static/
+│   └── uploads/
+│       └── crops/
+│
+├── templates/
+│
+└── __pycache__/ (ignored)
 
-app.py  
-config.py  
-models.py  
-predict_fixed.py  
-download_opencv_models.py  
+---
 
-requirements.txt  
-Procfile  
-render.yaml  
-runtime.txt  
+## ⚠️ Important Notes
 
-models/  
-models_opencv/  
-static/  
-templates/  
+- .venv → Do NOT upload  
+- .env → Do NOT upload  
+- Large model files (>100MB) → Use Git LFS  
+
+---
+
+## 👥 Team — Green University of Bangladesh (CSE-404)
+
+| Name | Student ID |
+|------|-----------|
+| Md Raisul Islam | 231902037 |
+| Md Mahabub Hasan Mahin | 231902056 |
+| Chinmoy Debnath | 231902029 |
 
 ---
 
 ## 👨‍💻 Author
 
 Md Mahabub Hasan Mahin
+
+---
+
+## ⭐ Future Improvements
+
+- Better age prediction accuracy  
+- Live camera detection  
+- Faster inference  
+- Mobile optimization  
+
