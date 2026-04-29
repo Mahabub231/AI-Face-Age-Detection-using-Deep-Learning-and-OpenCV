@@ -67,39 +67,39 @@ Default mode = opencv (no GPU required)
 
 ## 📁 Project Structure
 
+
 AI-Face-Age-Detection-using-Deep-Learning-and-OpenCV/
 │
-├── app.py                      # Flask main app (routes + UI)
-├── config.py                   # App configuration (.env settings)
-├── models.py                   # Database models (SQLAlchemy)
-├── predict_fixed.py            # Face detection + age/gender prediction engine
-├── download_opencv_models.py   # Download required OpenCV models
+├── app.py # Main Flask app (routes, API, UI handling)
+├── config.py # App configuration & environment settings
+├── models.py # Database models (SQLAlchemy)
+├── predict_fixed.py # Core AI engine (face detection + age/gender)
+├── download_opencv_models.py # Script to download OpenCV models
 │
-├── requirements.txt            # Python dependencies
-├── Procfile                    # Deployment config (Render/Heroku)
-├── render.yaml                 # Render deployment setup
-├── runtime.txt                 # Python version
-├── README.md                   # Project documentation
+├── requirements.txt # Python dependencies
+├── Procfile # Deployment config (Render/Heroku)
+├── render.yaml # Render deployment setup
+├── runtime.txt # Python version for deployment
+├── README.md # Project documentation
 │
-├── models/
-│   └── best_utkface_model.pth
+├── models/ # PyTorch trained models
+│ └── best_utkface_model.pth
 │
-├── models_opencv/
-│   ├── opencv_face_detector.pb
-│   ├── opencv_face_detector.pbtxt
-│   ├── age_net.caffemodel
-│   ├── age_deploy.prototxt
-│   ├── gender_net.caffemodel
-│   └── gender_deploy.prototxt
+├── models_opencv/ # OpenCV pre-trained models
+│ ├── opencv_face_detector.pb
+│ ├── opencv_face_detector.pbtxt
+│ ├── age_net.caffemodel
+│ ├── age_deploy.prototxt
+│ ├── gender_net.caffemodel
+│ └── gender_deploy.prototxt
 │
-├── static/
-│   └── uploads/
-│       └── crops/
+├── static/ # Static files (CSS, JS, uploads)
+│ └── uploads/
+│ └── crops/ # Detected face images
 │
-├── templates/
+├── templates/ # HTML templates (frontend UI)
 │
-└── __pycache__/ (ignored)
-
+└── pycache/ # Python cache (ignored)
 ---
 
 ## ⚠️ Important Notes
