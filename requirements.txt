@@ -1,23 +1,17 @@
-# ── Web Framework ──────────────────────────────────────────
 flask>=3.0
 flask-sqlalchemy>=3.1
 werkzeug>=3.0
 gunicorn>=21.0
 
-# ── Database ───────────────────────────────────────────────
 psycopg2-binary>=2.9
 sqlalchemy>=2.0
 python-dotenv>=1.0
 
-# ── Image / CV ─────────────────────────────────────────────
 pillow>=10.0
 opencv-python-headless>=4.8
-numpy<2
+numpy==1.26.4
 
-# ── Cloud Storage ──────────────────────────────────────────
 cloudinary>=1.36
 
-# ── AI / ML — PyTorch CPU (Render free tier) ───────────────
 torch==2.9.0+cpu
 torchvision==0.24.0+cpu
---extra-index-url https://download.pytorch.org/whl/cpu
