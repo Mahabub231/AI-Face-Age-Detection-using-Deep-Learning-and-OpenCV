@@ -18,6 +18,6 @@ numpy<2
 cloudinary>=1.36
 
 # ── AI / ML — PyTorch CPU (Render free tier) ───────────────
-torch==2.2.2+cpu
-torchvision==0.17.2+cpu
+torch==2.9.0+cpu
+torchvision==0.24.0+cpu
 --extra-index-url https://download.pytorch.org/whl/cpu
