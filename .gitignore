@@ -1,0 +1,34 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+
+# Database
+*.db
+*.sqlite3
+
+# Uploads (user images)
+static/uploads/*.jpg
+static/uploads/*.jpeg
+static/uploads/*.png
+static/uploads/*.webp
+static/uploads/crops/
+!static/uploads/.gitkeep
+
+# Large model files — use Git LFS or store separately
+# models/best_utkface_model.pth  ← uncomment to exclude from git
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

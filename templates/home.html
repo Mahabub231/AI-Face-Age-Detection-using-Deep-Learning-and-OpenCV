@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- ── HERO ── -->
+<section class="hero-section">
+  <div class="hero-content">
+    <div class="hero-tag">🔬 Deep Learning + OpenCV</div>
+    <h1>Detect Age<br>from <span class="grad-text">Face Images</span><br>Instantly</h1>
+    <p>Upload any face photo and get instant AI-powered age prediction, gender detection and confidence scoring using our ResNet18 model trained on UTKFace.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="/signup">🚀 Get Started Free</a>
+      <a class="btn secondary" href="/demo">👁 Live Demo</a>
+    </div>
+  </div>
+
+  <div class="demo-card glass scan-corners">
+    <div class="face-preview">
+      <div class="scan-line"></div>
+      <span class="emoji">🙂</span>
+    </div>
+    <h3 style="font-family:'Syne',sans-serif;font-weight:800;margin-bottom:14px;">Detected Face</h3>
+    <div class="metric"><span>Predicted Age</span><b>24 yrs</b></div>
+    <div class="metric"><span>Age Group</span><b>20–32</b></div>
+    <div class="metric"><span>Gender</span><b>Male</b></div>
+    <div class="metric"><span>Confidence</span><b>89.4%</b></div>
+  </div>
+</section>
+
+<!-- ── UPLOAD DEMO ── -->
+<section class="upload-preview-section">
+  <div class="section-head">
+    <h2>Drag &amp; Drop Upload</h2>
+    <p>Smooth upload experience with real-time preview before you analyze.</p>
+  </div>
+  <div class="upload-demo glass">
+    <div class="upload-icon">📤</div>
+    <h3 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;">Drop your image here</h3>
+    <p style="color:var(--muted);margin-bottom:22px;">JPG, PNG, WEBP supported · Max 10MB</p>
+    <a href="/upload" class="btn primary">Upload Image</a>
+    <div class="preview-card">
+      <span class="loader"></span>
+      <p style="margin-top:10px;font-size:14px;color:var(--muted);">Analyzing face…</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how-section">
+  <div class="section-head">
+    <h2>How It Works</h2>
+    <p>A simple 4-step AI pipeline from upload to result.</p>
+  </div>
+  <div class="steps">
+    <div class="step glass">📷<h3>Upload Image</h3></div>
+    <div class="arrow">→</div>
+    <div class="step glass">🎯<h3>Face Detection</h3></div>
+    <div class="arrow">→</div>
+    <div class="step glass">🤖<h3>AI Prediction</h3></div>
+    <div class="arrow">→</div>
+    <div class="step glass">📊<h3>View Result</h3></div>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="features-grid-section" id="features">
+  <div class="section-head">
+    <h2>Everything You Need</h2>
+    <p>Production-grade features built for real use.</p>
+  </div>
+  <div class="feature-grid container">
+    <div class="feature-card glass">⚡<h3>Fast AI Prediction</h3><p>ResNet18 model inference, optimized for speed.</p></div>
+    <div class="feature-card glass">👥<h3>Multi-face Ready</h3><p>Architecture built for detecting multiple faces.</p></div>
+    <div class="feature-card glass">☁️<h3>Cloudinary Storage</h3><p>Images stored securely on cloud, not your server.</p></div>
+    <div class="feature-card glass">🔒<h3>Privacy First</h3><p>Delete your image and result data anytime.</p></div>
+    <div class="feature-card glass">🕘<h3>Full History</h3><p>Every prediction saved in your personal dashboard.</p></div>
+    <div class="feature-card glass">🛡️<h3>Admin Dashboard</h3><p>Full control over users, predictions and storage.</p></div>
+  </div>
+</section>
+
+<!-- ── PRIVACY ── -->
+<section class="privacy-section glass">
+  <div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;margin-bottom:10px;">Your Data is Safe</h2>
+    <p style="color:var(--muted);max-width:440px;">Images are uploaded to Cloudinary securely. You own your data — delete it anytime from your dashboard.</p>
+  </div>
+  <span class="privacy-icon">🔐</span>
+</section>
+
+<!-- ── STATS ── -->
+<section class="stats-section container">
+  <div class="stat-card glass"><b>20K+</b><span>UTKFace training images</span></div>
+  <div class="stat-card glass"><b>500K+</b><span>IMDB-WIKI face images</span></div>
+  <div class="stat-card glass"><b>ResNet</b><span>18-layer backbone model</span></div>
+  <div class="stat-card glass"><b>Fast</b><span>OpenCV face detection</span></div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <h2>Start Detecting Age<br>with AI <span class="grad-text">Today</span></h2>
+  <a class="btn primary" href="/signup">Create Free Account →</a>
+</section>
+
+{% endblock %}

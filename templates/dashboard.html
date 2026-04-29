@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="dashboard-hero">
+  <div class="profile-card glass">
+    <div class="avatar big">{{ auth_user.name[0].upper() }}</div>
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;">{{ auth_user.name }}</h2>
+      <p style="color:var(--muted);font-size:14px;">{{ auth_user.email }}</p>
+      <span class="pill violet" style="margin-top:6px;display:inline-block;">{{ auth_user.role }}</span>
+    </div>
+  </div>
+  <div>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:10px;">Joined {{ auth_user.created_at.strftime('%d %B %Y') }}</p>
+    <a class="btn primary" href="/upload">📤 Upload New Image</a>
+  </div>
+</section>
+
+<div class="container" style="padding-bottom:80px;">
+  <div class="section-head left">
+    <h2>Recent Predictions</h2>
+    <p>Your last analyzed images.</p>
+  </div>
+
+  <div class="grid">
+    {% for p in predictions[:6] %}
+    <div class="result-card glass">
+      <img src="{{ p.image_url }}" alt="Analyzed image" loading="lazy">
+      <div style="padding:4px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h3 style="margin:0;font-size:15px;">Avg Age: <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">~{{ p.predicted_age }} yrs</span></h3>
+          <span class="pill">{{ p.face_count }} face{{ 's' if p.face_count != 1 }}</span>
+        </div>
+        {% if p.gender and p.gender != 'No Face' %}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+          {% for part in p.gender.split(', ') %}
+            <span class="pill {% if 'Female' in part %}pink{% elif 'Male' in part %}blue{% endif %}" style="font-size:11px;">
+              {% if 'Male' in part %}♂{% elif 'Female' in part %}♀{% endif %}{{ part }}
+            </span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <div class="card-actions">
+        <a class="btn-small" href="/result/{{ p.id }}">View</a>
+        <a class="btn-small" href="/download-result/{{ p.id }}">⬇</a>
+        <form method="POST" action="/delete-result/{{ p.id }}" class="inline">
+          <button class="danger" type="submit">🗑</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <div class="empty card">
+      <div class="empty-icon">🖼️</div>
+      <h3 style="margin-bottom:8px;">No predictions yet</h3>
+      <p style="color:var(--muted);margin-bottom:20px;">Upload your first face photo to start.</p>
+      <a class="btn primary" href="/upload">Upload Now</a>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if predictions %}
+  <h2 class="table-title">Full History</h2>
+  <div class="table-wrap glass">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Image</th><th>Avg Age</th><th>Faces</th><th>Gender Count</th><th>Date</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for p in predictions %}
+        <tr>
+          <td style="color:var(--muted);">{{ p.id }}</td>
+          <td><img class="table-img" src="{{ p.image_url }}" alt=""></td>
+          <td><b>~{{ p.predicted_age }}</b></td>
+          <td><span class="pill">{{ p.face_count }}</span></td>
+          <td style="font-size:13px;">{{ p.gender or '—' }}</td>
+          <td style="color:var(--muted);font-size:12px;">{{ p.created_at.strftime('%d-%m-%Y') }}</td>
+          <td>
+            <div style="display:flex;gap:6px;">
+              <a class="btn-small" href="/result/{{ p.id }}">View</a>
+              <form method="POST" action="/delete-result/{{ p.id }}" class="inline">
+                <button class="danger" type="submit">Del</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+.pill.pink { background:rgba(236,72,153,.15); border:1px solid rgba(236,72,153,.35); color:#ec4899; }
+.pill.blue { background:rgba(59,130,246,.15); border:1px solid rgba(59,130,246,.35); color:#60a5fa; }
+</style>
+{% endblock %}

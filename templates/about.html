@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-hero">
+  <h1>About <span class="grad-text">This Project</span></h1>
+  <p>Age Detection using Deep Learning &amp; OpenCV — Machine Learning Lab Project, Green University of Bangladesh.</p>
+</section>
+
+<div class="about-grid container">
+  <div class="card">
+    <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:22px;">📋 Project Information</h2>
+    <div class="detail-row"><span class="label">University</span><span class="value">Green University of Bangladesh</span></div>
+    <div class="detail-row"><span class="label">Department</span><span class="value">CSE</span></div>
+    <div class="detail-row"><span class="label">Course</span><span class="value">Machine Learning Lab</span></div>
+    <div class="detail-row"><span class="label">Course Code</span><span class="value"><span class="pill">CSE-404</span></span></div>
+    <div class="detail-row"><span class="label">Section</span><span class="value">231 D2</span></div>
+    <div class="detail-row"><span class="label">Teacher</span><span class="value">Mayeesha Farjana</span></div>
+
+    <div style="margin-top:28px;padding:20px;background:var(--card);border-radius:16px;border:1px solid var(--line);">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;">🧠 Tech Stack</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="pill">Flask</span>
+        <span class="pill">PyTorch</span>
+        <span class="pill">ResNet18</span>
+        <span class="pill">OpenCV</span>
+        <span class="pill">UTKFace</span>
+        <span class="pill">Cloudinary</span>
+        <span class="pill">Supabase</span>
+        <span class="pill">SQLAlchemy</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:22px;">👥 Team Members</h2>
+    {% for member in team %}
+    <div class="team-member">
+      <div class="avatar">{{ member.name[0] }}</div>
+      <div>
+        <h3>{{ member.name }}</h3>
+        <p>Student ID: {{ member.id }}</p>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div style="margin-top:32px;padding:20px;background:linear-gradient(135deg,rgba(139,92,246,.1),rgba(34,211,238,.08));border-radius:16px;border:1px solid rgba(139,92,246,.3);">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">🎯 Project Goal</h3>
+      <p style="color:var(--muted);font-size:14px;line-height:1.7;">Build a full-stack AI web application for real-time face age detection using deep learning, demonstrating production-level web development integrated with machine learning.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

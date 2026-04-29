@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-hero">
+  <h1>Live <span class="grad-text">Demo Preview</span></h1>
+  <p>This shows how your age detection result looks after image analysis.</p>
+</section>
+
+<div class="demo-layout container">
+  <div class="demo-card glass" style="max-width:100%;">
+    <div class="face-preview scan-corners">
+      <div class="scan-line"></div>
+      <span class="emoji">🙂</span>
+    </div>
+    <h3 style="font-family:'Syne',sans-serif;font-weight:800;margin:18px 0 12px;">Detected Face</h3>
+    <div class="metric"><span>Predicted Age</span><b>24 yrs</b></div>
+    <div class="metric"><span>Age Group</span><b>20–32</b></div>
+    <div class="metric"><span>Gender</span><b>Male</b></div>
+    <div class="metric"><span>Confidence</span><b>89.4%</b></div>
+
+    <div class="conf-bar-wrap" style="margin-top:18px;">
+      <div class="conf-bar-label"><span>Confidence</span><b>89.4%</b></div>
+      <div class="conf-bar"><div class="conf-bar-fill" style="width:89.4%"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;margin-bottom:16px;">Try it yourself</h2>
+    <p style="color:var(--muted);margin-bottom:22px;">Create a free account, then upload any face image. Our AI will analyze and return age, gender, and confidence within seconds.</p>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--card);border-radius:12px;border:1px solid var(--line);">
+        <span style="font-size:22px;">1️⃣</span>
+        <span>Create a free account</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--card);border-radius:12px;border:1px solid var(--line);">
+        <span style="font-size:22px;">2️⃣</span>
+        <span>Upload a face photo (JPG/PNG/WEBP)</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--card);border-radius:12px;border:1px solid var(--line);">
+        <span style="font-size:22px;">3️⃣</span>
+        <span>Get instant AI prediction result</span>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a class="btn primary" href="/signup">Get Started Free</a>
+      <a class="btn secondary" href="/upload">Upload Image</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

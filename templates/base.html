@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI FaceAge — Deep Learning Age Detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <!-- Brand -->
+  <a class="brand" href="/">
+    <div class="brand-icon">🧠</div>
+    <span>AI FaceAge</span>
+  </a>
+
+  <!-- Nav links -->
+  <div class="navlinks">
+    <a href="/">Home</a>
+    <a href="/features">Features</a>
+    <a href="/demo">Demo</a>
+    <a href="/about">About</a>
+
+    {% if auth_user %}
+      {% if auth_user.role == 'admin' %}
+        <a href="/admin">⚙️ Admin</a>
+      {% else %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/upload">📤 Upload</a>
+      {% endif %}
+    {% else %}
+      <a href="/login">Login</a>
+      <a class="nav-btn" href="/signup">Get Started</a>
+    {% endif %}
+
+    <button id="themeToggle" class="theme-toggle" type="button" title="Toggle theme">🌙</button>
+
+    <!-- ── User avatar dropdown (logged in only) ── -->
+    {% if auth_user %}
+    <div class="user-menu" id="userMenu">
+      <!-- Avatar button -->
+      <button class="user-avatar-btn" id="userAvatarBtn" title="{{ auth_user.name }}">
+        <span class="user-initial">{{ auth_user.name[0].upper() }}</span>
+        <span class="user-caret">▾</span>
+      </button>
+
+      <!-- Dropdown panel -->
+      <div class="user-dropdown" id="userDropdown">
+        <!-- User info header -->
+        <div class="ud-header">
+          <div class="ud-avatar">{{ auth_user.name[0].upper() }}</div>
+          <div class="ud-info">
+            <b class="ud-name">{{ auth_user.name }}</b>
+            <span class="ud-email">{{ auth_user.email }}</span>
+            <span class="ud-role ud-role-{{ auth_user.role }}">{{ auth_user.role }}</span>
+          </div>
+        </div>
+
+        <div class="ud-divider"></div>
+
+        <!-- Menu items -->
+        {% if auth_user.role == 'admin' %}
+          <a class="ud-item" href="/admin">⚙️ Admin Dashboard</a>
+        {% else %}
+          <a class="ud-item" href="/dashboard">📊 Dashboard</a>
+          <a class="ud-item" href="/upload">📤 Upload Image</a>
+          <a class="ud-item" href="/profile">👤 My Profile</a>
+        {% endif %}
+
+        <div class="ud-divider"></div>
+
+        <!-- Logout -->
+        <a class="ud-item ud-logout" href="/logout">
+          <span class="ud-logout-icon">⏻</span> Logout
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- Flash messages -->
+<div class="flash-wrap">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <div class="flash {{ category }}">{{ message }}</div>
+  {% endfor %}
+{% endwith %}
+</div>
+
+{% block content %}{% endblock %}
+
+<footer class="footer">
+  <p>© 2026 <strong>AI FaceAge</strong> — Deep Learning · OpenCV · UTKFace · Green University of Bangladesh</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

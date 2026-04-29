@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-hero">
+  <h1>My <span class="grad-text">Profile</span></h1>
+  <p>Your account information and usage overview.</p>
+</section>
+
+<div class="profile-layout container">
+  <div class="profile-card glass vertical">
+    <div class="avatar huge">{{ auth_user.name[0].upper() }}</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:14px;">{{ auth_user.name }}</h2>
+    <p style="color:var(--muted);font-size:14px;margin:4px 0 10px;">{{ auth_user.email }}</p>
+    <span class="pill violet">{{ auth_user.role }}</span>
+
+    <div class="profile-stat-grid" style="margin-top:24px;width:100%;">
+      <div class="profile-stat">
+        <b>{{ total_predictions }}</b>
+        <span>Predictions</span>
+      </div>
+      <div class="profile-stat">
+        <b>{{ auth_user.created_at.strftime('%Y') }}</b>
+        <span>Member since</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:24px;">Account Details</h2>
+
+    <div class="detail-row">
+      <span class="label">Full Name</span>
+      <span class="value">{{ auth_user.name }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Email</span>
+      <span class="value">{{ auth_user.email }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Role</span>
+      <span class="value"><span class="pill violet">{{ auth_user.role }}</span></span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Account Status</span>
+      <span class="value"><span class="pill good">Active</span></span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Member Since</span>
+      <span class="value" style="color:var(--muted);">{{ auth_user.created_at.strftime('%d %B %Y') }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Total Predictions</span>
+      <span class="value">{{ total_predictions }}</span>
+    </div>
+
+    <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+      <a class="btn primary" href="/upload">📤 New Upload</a>
+      <a class="btn secondary" href="/dashboard">📊 Dashboard</a>
+      <a class="btn secondary" href="/logout">Logout</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

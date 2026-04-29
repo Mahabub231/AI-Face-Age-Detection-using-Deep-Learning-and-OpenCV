@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-hero">
+  <h1>⚙️ Admin <span class="grad-text">Dashboard</span></h1>
+  <p>Full control over users, predictions, storage and activity logs.</p>
+</section>
+
+<div class="container" style="padding-bottom:80px;">
+
+  {% if use_cloudinary %}
+  <div class="cloud-badge">☁️ Cloudinary Storage Active</div>
+  {% endif %}
+
+  <!-- Stats -->
+  <div class="admin-stats">
+    <div class="admin-stat-card">
+      <div class="stat-icon">👥</div>
+      <b>{{ total_users }}</b>
+      <span>Total Users</span>
+    </div>
+    <div class="admin-stat-card">
+      <div class="stat-icon">📊</div>
+      <b>{{ total_predictions }}</b>
+      <span>Total Predictions</span>
+    </div>
+    <div class="admin-stat-card">
+      <div class="stat-icon">💾</div>
+      <b>{{ storage_mb }}<small style="font-size:18px;"> MB</small></b>
+      <span>Local Storage Used</span>
+    </div>
+    <div class="admin-stat-card">
+      <div class="stat-icon">🚫</div>
+      <b>{{ blocked_users }}</b>
+      <span>Blocked Users</span>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="chart-grid">
+    <div class="chart-card glass">
+      <h3>User Status</h3>
+      <div class="bar-row">
+        <span>Active</span>
+        <div class="bar"><i style="width: {{ (active_users / total_users * 100) if total_users else 0 }}%"></i></div>
+        <b>{{ active_users }}</b>
+      </div>
+      <div class="bar-row">
+        <span>Blocked</span>
+        <div class="bar"><i style="width: {{ (blocked_users / total_users * 100) if total_users else 0 }}%;background:linear-gradient(135deg,#ef4444,#f97316)"></i></div>
+        <b>{{ blocked_users }}</b>
+      </div>
+    </div>
+    <div class="chart-card glass" style="text-align:center;">
+      <h3>Upload Summary</h3>
+      <div class="circle-chart"><span>{{ total_predictions }}</span></div>
+      <p style="color:var(--muted);font-size:13px;">Total prediction records in database.</p>
+    </div>
+  </div>
+
+  <!-- Recent Uploads -->
+  <h2 class="table-title">Recent Uploads</h2>
+  <div class="grid">
+    {% for p in recent_uploads %}
+    <div class="result-card glass">
+      <img src="{{ p.image_url }}" alt="" loading="lazy">
+      <p style="font-size:12px;color:var(--muted);">{{ p.user.email }}</p>
+      <p><b>Avg Age:</b> {{ p.predicted_age }} · {{ p.age_group }}</p>
+      <p style="color:var(--muted);font-size:13px;">Faces: {{ p.face_count }}</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Users Table -->
+  <h2 class="table-title">User Control</h2>
+  <div class="table-wrap glass">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Uploads</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.id }}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="avatar" style="width:32px;height:32px;font-size:13px;">{{ u.name[0].upper() }}</div>
+              {{ u.name }}
+            </div>
+          </td>
+          <td style="color:var(--muted);">{{ u.email }}</td>
+          <td><span class="pill {{ 'violet' if u.role == 'admin' else '' }}">{{ u.role }}</span></td>
+          <td>{{ u.predictions|length }}</td>
+          <td><span class="pill {{ 'bad' if u.blocked else 'good' }}">{{ 'Blocked' if u.blocked else 'Active' }}</span></td>
+          <td>
+            {% if u.role != 'admin' %}
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <form method="POST" action="/admin/block/{{ u.id }}" class="inline">
+                <button class="btn-small" type="submit">{{ 'Unblock' if u.blocked else 'Block' }}</button>
+              </form>
+              <form method="POST" action="/admin/delete-user/{{ u.id }}" class="inline">
+                <button class="danger" type="submit">Delete</button>
+              </form>
+            </div>
+            {% else %}
+            <span style="color:var(--muted);font-size:13px;">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Predictions Table -->
+  <h2 class="table-title">Prediction History</h2>
+  <div class="table-wrap glass">
+    <table>
+      <thead>
+        <tr><th>#</th><th>User</th><th>Image</th><th>Avg Age</th><th>Group</th><th>Faces</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        {% for p in predictions %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td style="color:var(--muted);font-size:13px;">{{ p.user.email }}</td>
+          <td><img class="table-img" src="{{ p.image_url }}" alt=""></td>
+          <td><b>{{ p.predicted_age }}</b></td>
+          <td><span class="pill">{{ p.age_group }}</span></td>
+          <td>{{ p.face_count }}</td>
+          <td style="color:var(--muted);font-size:12px;">{{ p.created_at.strftime('%d-%m-%Y') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Logs -->
+  <h2 class="table-title">Admin Activity Logs</h2>
+  <div class="table-wrap glass">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Action</th><th>Target User ID</th><th>Date &amp; Time</th></tr>
+      </thead>
+      <tbody>
+        {% for l in logs %}
+        <tr>
+          <td>{{ l.id }}</td>
+          <td>{{ l.action }}</td>
+          <td>{{ l.target_user_id or '—' }}</td>
+          <td style="color:var(--muted);font-size:12px;">{{ l.created_at.strftime('%d-%m-%Y %I:%M %p') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:30px;">No logs yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

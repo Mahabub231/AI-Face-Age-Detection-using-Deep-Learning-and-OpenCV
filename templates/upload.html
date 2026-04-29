@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-hero">
+  <h1>Upload <span class="grad-text">Face Image</span></h1>
+  <p>Choose Single Face or Group Photo mode before uploading.</p>
+</section>
+
+<div class="upload-layout container">
+  <!-- ── Left: Form ── -->
+  <form method="POST" enctype="multipart/form-data" class="upload-box glass" id="uploadForm">
+
+    <!-- Mode selector -->
+    <div class="mode-selector">
+      <button type="button" class="mode-btn active" id="btnSingle" onclick="setMode('single')">
+        <span class="mode-icon">🧑</span>
+        <b>Single Face</b>
+        <small>Portrait, selfie</small>
+      </button>
+      <button type="button" class="mode-btn" id="btnGroup" onclick="setMode('group')">
+        <span class="mode-icon">👥</span>
+        <b>Group Photo</b>
+        <small>Multiple people</small>
+      </button>
+    </div>
+    <input type="hidden" name="face_mode" id="faceModeInput" value="single">
+
+    <!-- Mode info banner -->
+    <div class="mode-info" id="modeInfo">
+      <span id="modeInfoText">🧑 Single mode — detects the <b>largest / most prominent</b> face only.</span>
+    </div>
+
+    <!-- File input -->
+    <input id="imageInput" type="file" name="image" accept="image/*" required hidden>
+    <label for="imageInput" class="drop-zone" id="dropZone">
+      <div class="drop-icon">📤</div>
+      <h3>Drag &amp; drop here</h3>
+      <p>JPG · PNG · WEBP · max 10 MB</p>
+      <span class="btn primary" style="pointer-events:none;">Choose Image</span>
+    </label>
+
+    <!-- Analyzing overlay -->
+    <div class="analyzing" id="analyzing">
+      <span class="loader"></span>
+      <b style="display:block;margin-top:14px;font-size:16px;">🔍 Analyzing faces…</b>
+      <p style="color:var(--muted);font-size:13px;margin-top:6px;">Running AI detection, please wait</p>
+    </div>
+
+    <button class="btn primary wide" type="submit" id="analyzeBtn" style="margin-top:20px;">
+      🔍 Detect &amp; Analyze
+    </button>
+
+  </form>
+
+  <!-- ── Right: Preview ── -->
+  <div class="preview-panel card">
+    <h2>Image Preview</h2>
+    <img id="previewImage" class="preview-image" alt="Preview">
+    <div id="previewEmpty" style="text-align:center;padding:50px 20px;color:var(--muted);">
+      <div style="font-size:56px;margin-bottom:12px;">🖼️</div>
+      <p style="font-size:15px;font-weight:600;margin-bottom:6px;">No image selected</p>
+      <p style="font-size:13px;">Select a photo to preview</p>
+    </div>
+    <div id="fileInfo" style="display:none;margin-top:14px;padding:12px 14px;background:var(--card);border-radius:12px;border:1px solid var(--line);">
+      <p style="font-size:13px;color:var(--muted);margin:0;" id="fileName"></p>
+      <p style="font-size:13px;color:var(--muted);margin:4px 0 0;" id="fileSize"></p>
+      <p style="font-size:13px;color:var(--cyan);margin:4px 0 0;font-weight:600;" id="modeLabel">Mode: Single Face</p>
+    </div>
+  </div>
+</div>
+
+<style>
+.mode-selector {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin-bottom: 14px;
+}
+.mode-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 14px 10px;
+  border: 1.5px solid var(--line); border-radius: var(--r);
+  background: var(--card); cursor: pointer; color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color .2s, background .2s;
+}
+.mode-btn .mode-icon { font-size: 26px; }
+.mode-btn b  { font-size: 14px; font-weight: 700; }
+.mode-btn small { font-size: 11px; color: var(--muted); }
+.mode-btn.active {
+  border-color: var(--cyan);
+  background: rgba(34,211,238,.08);
+  box-shadow: 0 0 0 3px rgba(34,211,238,.12);
+}
+.mode-info {
+  padding: 10px 14px; border-radius: 10px;
+  background: rgba(34,211,238,.07); border: 1px solid rgba(34,211,238,.2);
+  font-size: 13px; color: var(--cyan); margin-bottom: 14px;
+}
+.caps-list { margin-top: 16px; }
+.cap-item {
+  padding: 8px 0; border-bottom: 1px solid var(--line2);
+  font-size: 13px; color: var(--muted);
+}
+.cap-item:last-child { border-bottom: none; }
+</style>
+
+<script>
+function setMode(mode) {
+  document.getElementById('faceModeInput').value = mode;
+  document.getElementById('btnSingle').classList.toggle('active', mode === 'single');
+  document.getElementById('btnGroup').classList.toggle('active',  mode === 'group');
+  document.getElementById('modeLabel').textContent = mode === 'single'
+    ? 'Mode: Single Face' : 'Mode: Group Photo';
+  document.getElementById('modeInfoText').innerHTML = mode === 'single'
+    ? '🧑 Single mode — detects the <b>largest / most prominent</b> face only.'
+    : '👥 Group mode — detects <b>all faces</b> in the photo (up to 20).';
+}
+</script>
+{% endblock %}

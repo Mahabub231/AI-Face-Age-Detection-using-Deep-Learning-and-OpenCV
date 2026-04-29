@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-hero">
+  <h1>Detection <span class="grad-text">Result</span></h1>
+  <p>AI-powered face age &amp; gender analysis.</p>
+</section>
+
+<div class="result-page container">
+  <!-- ══ LEFT: Annotated Image ══ -->
+  <div>
+    <div class="image-box glass">
+      <img src="{{ pred.image_url }}" alt="Analyzed image">
+    </div>
+
+    {% if pred.message %}
+    <div class="msg-banner {% if pred.face_count == 0 %}no-face{% endif %}">
+      {{ '⚠️' if pred.face_count == 0 else '✅' }} {{ pred.message }}
+    </div>
+    {% endif %}
+
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+      <a class="btn primary" href="/download-result/{{ pred.id }}">⬇ Download Boxed Image</a>
+      <form method="POST" action="/delete-result/{{ pred.id }}" class="inline">
+        <button class="danger big" type="submit">🗑 Delete</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT: Summary ══ -->
+  <div class="card details">
+    <h2>Face Analysis Summary</h2>
+
+    <!-- Age model badge -->
+    <div class="age-model-badge {% if pred.mode and 'pytorch' in pred.mode %}badge-exact{% else %}badge-est{% endif %}">
+      {% if pred.mode and 'pytorch' in pred.mode %}
+        🎯 PyTorch UTKFace Model — <b>Exact Real Age</b>
+      {% else %}
+        ⚠️ Caffe Fallback — <b>Estimated Age (grouped)</b>
+      {% endif %}
+    </div>
+
+    <div class="detail-row">
+      <span class="label">Faces Detected</span>
+      <span class="value" style="font-size:26px;font-weight:800;font-family:'Syne',sans-serif;">
+        {{ pred.face_count }}
+      </span>
+    </div>
+
+    <div class="detail-row">
+      <span class="label">Average Age</span>
+      <span class="value">
+        <span class="value big">{{ pred.predicted_age }} yrs</span>
+        {% if pred.mode and 'caffe' in pred.mode %}
+          <span class="est-tag">estimated</span>
+        {% endif %}
+      </span>
+    </div>
+
+    {% if pred.gender and pred.gender != 'No Face' %}
+    <div class="detail-row">
+      <span class="label">Gender Count</span>
+      <span class="value" style="display:flex;gap:6px;flex-wrap:wrap;">
+        {% for part in pred.gender.split(', ') %}
+          <span class="pill {% if 'Female' in part %}pink{% elif 'Male' in part %}blue{% endif %}">
+            {% if 'Male' in part %}♂{% elif 'Female' in part %}♀{% endif %} {{ part }}
+          </span>
+        {% endfor %}
+      </span>
+    </div>
+    {% endif %}
+
+    <div class="detail-row">
+      <span class="label">AI Mode</span>
+      <span class="value"><span class="pill">{{ pred.mode or 'opencv' }}</span></span>
+    </div>
+
+    <div class="detail-row">
+      <span class="label">Analyzed On</span>
+      <span class="value" style="font-size:13px;color:var(--muted);">
+        {{ pred.created_at.strftime('%d %B %Y, %I:%M %p') }}
+      </span>
+    </div>
+
+    <a class="btn secondary wide" href="/dashboard" style="margin-top:20px;">← Back to Dashboard</a>
+  </div>
+</div>
+
+<!-- ══ FACE CARDS GRID ══ -->
+{% if face_details %}
+<div class="container face-table-section">
+  <h2 class="table-title" style="margin-bottom:20px;">
+    Each Face Result
+    <span class="pill" style="margin-left:10px;">
+      {{ face_details|length }} face{{ 's' if face_details|length != 1 }}
+    </span>
+  </h2>
+
+  <div class="face-result-grid">
+    {% for f in face_details %}
+    <div class="face-result-card glass">
+
+      <!-- Crop thumbnail -->
+      <div class="frc-image">
+        {% if f.crop_url %}
+          <img src="{{ f.crop_url }}" alt="Face {{ f.face }}">
+        {% else %}
+          <div class="frc-placeholder">{{ f.face }}</div>
+        {% endif %}
+        <div class="frc-badge">#{{ f.face }}</div>
+      </div>
+
+      <!-- Info -->
+      <div class="frc-body">
+        <div class="frc-top">
+          <span class="pill {% if f.gender == 'Female' %}pink{% else %}blue{% endif %}">
+            {{ '♀' if f.gender == 'Female' else '♂' }} {{ f.gender }}
+          </span>
+          <span class="pill">{{ f.age_group }}</span>
+        </div>
+
+        <!-- Age display: exact vs estimated -->
+        <div class="frc-age-wrap">
+          <span class="frc-age-num">{{ f.age|int }}<small> yrs</small></span>
+          {% if f.age_is_exact %}
+            <span class="frc-exact-tag">✓ exact</span>
+          {% else %}
+            <span class="frc-est-tag">~ estimated</span>
+          {% endif %}
+        </div>
+
+        <div class="frc-conf-label">
+          <span>Face Confidence</span><b>{{ f.confidence }}%</b>
+        </div>
+        <div class="frc-conf-bar">
+          <div class="frc-conf-fill" style="width:{{ f.confidence }}%"></div>
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<style>
+/* ── message banner ── */
+.msg-banner {
+  margin-top:14px; padding:12px 16px; border-radius:14px;
+  background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.3);
+  color:var(--green); font-size:14px; font-weight:600;
+}
+.msg-banner.no-face {
+  background:rgba(239,68,68,.1); border-color:rgba(239,68,68,.3); color:var(--red);
+}
+
+/* ── age model badge ── */
+.age-model-badge {
+  padding:10px 14px; border-radius:12px;
+  font-size:13px; margin-bottom:20px;
+}
+.badge-exact { background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.3); color:var(--green); }
+.badge-est   { background:rgba(245,158,11,.1);  border:1px solid rgba(245,158,11,.3);  color:#f59e0b; }
+
+/* estimated tag inline */
+.est-tag {
+  font-size:11px; padding:2px 8px; border-radius:999px;
+  background:rgba(245,158,11,.15); border:1px solid rgba(245,158,11,.3);
+  color:#f59e0b; font-weight:600; margin-left:8px; vertical-align:middle;
+}
+
+/* ── face result grid ── */
+.face-table-section { padding-top:0; padding-bottom:80px; }
+.face-result-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap:16px;
+}
+.face-result-card {
+  border-radius:var(--r2); overflow:hidden;
+  transition:transform .2s, box-shadow .2s; display:flex; flex-direction:column;
+}
+.face-result-card:hover { transform:translateY(-6px); box-shadow:var(--shadow),var(--shadow-c); }
+
+/* Image */
+.frc-image { position:relative; aspect-ratio:1/1; background:var(--bg3); overflow:hidden; flex-shrink:0; }
+.frc-image img { width:100%; height:100%; object-fit:cover; display:block; }
+.frc-placeholder {
+  width:100%; height:100%; display:grid; place-items:center;
+  font-family:'Syne',sans-serif; font-size:48px; font-weight:800;
+  background:var(--grad); color:#fff;
+}
+.frc-badge {
+  position:absolute; bottom:8px; right:8px;
+  background:var(--grad); color:#fff; font-size:11px; font-weight:700;
+  padding:3px 10px; border-radius:999px; box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+
+/* Body */
+.frc-body { padding:14px; display:flex; flex-direction:column; gap:8px; flex:1; }
+.frc-top  { display:flex; gap:6px; flex-wrap:wrap; }
+
+/* Age display */
+.frc-age-wrap { display:flex; align-items:baseline; gap:8px; margin:4px 0; }
+.frc-age-num {
+  font-family:'Syne',sans-serif; font-size:28px; font-weight:800; line-height:1;
+  background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.frc-age-num small { font-size:14px; }
+
+.frc-exact-tag {
+  font-size:11px; padding:2px 8px; border-radius:999px; font-weight:700;
+  background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.3); color:var(--green);
+}
+.frc-est-tag {
+  font-size:11px; padding:2px 8px; border-radius:999px; font-weight:700;
+  background:rgba(245,158,11,.12); border:1px solid rgba(245,158,11,.3); color:#f59e0b;
+}
+
+/* Confidence */
+.frc-conf-label { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); }
+.frc-conf-bar   { height:7px; background:var(--line); border-radius:999px; overflow:hidden; }
+.frc-conf-fill  { height:100%; background:var(--grad); border-radius:999px; transition:width 1.1s ease; }
+
+/* Pill variants */
+.pill.pink { background:rgba(236,72,153,.15); border:1px solid rgba(236,72,153,.35); color:#ec4899; }
+.pill.blue { background:rgba(59,130,246,.15); border:1px solid rgba(59,130,246,.35); color:#60a5fa; }
+
+/* responsive */
+@media (max-width:600px) {
+  .face-result-grid { grid-template-columns: repeat(2, 1fr); gap:10px; }
+}
+</style>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.frc-conf-fill').forEach(el => {
+    const w = el.style.width; el.style.width = '0';
+    setTimeout(() => { el.style.width = w; }, 300 + Math.random()*200);
+  });
+});
+</script>
+{% endblock %}
